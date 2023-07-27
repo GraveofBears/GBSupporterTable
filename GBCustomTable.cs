@@ -18,6 +18,30 @@ namespace GBCustomTable
         private const string ModVersion = "0.1.0";
         private const string ModGUID = "odinplus.plugins.gbcustomtable";
 
+
+        private static readonly ConfigSync configSync = new(ModName) { DisplayName = ModName, CurrentVersion = ModVersion, MinimumRequiredVersion = ModVersion };
+
+        private static ConfigEntry<Toggle> serverConfigLocked = null!;
+
+        private ConfigEntry<T> config<T>(string group, string name, T value, ConfigDescription description, bool synchronizedSetting = true)
+        {
+            ConfigEntry<T> configEntry = Config.Bind(group, name, value, description);
+
+            SyncedConfigEntry<T> syncedConfigEntry = configSync.AddConfigEntry(configEntry);
+            syncedConfigEntry.SynchronizedConfig = synchronizedSetting;
+
+            return configEntry;
+        }
+
+        private ConfigEntry<T> config<T>(string group, string name, T value, string description, bool synchronizedSetting = true) => config(group, name, value, new ConfigDescription(description), synchronizedSetting);
+
+        private enum Toggle
+        {
+            On = 1,
+            Off = 0
+        }
+
+
         public void Awake()
         {
 
@@ -26,27 +50,27 @@ namespace GBCustomTable
             Custom_Sky_Forge.Name.English("Magic Crystal Table");
             Custom_Sky_Forge.Description.English("A black marble crystal");
             Custom_Sky_Forge.RequiredItems.Add("BlackMarble", 10, true);
-            Custom_Sky_Forge.Category.Add(BuildPieceCategory.Crafting);
+            Custom_Sky_Forge.Category.Set(BuildPieceCategory.Crafting);
 
             BuildPiece Custom_Table_Ext1 = new("customforgestone", "Custom_Table_Ext1");
             Custom_Table_Ext1.Name.English("Table Ext 1");
             Custom_Table_Ext1.Description.English("A black marble crystal");
             Custom_Table_Ext1.RequiredItems.Add("BlackMarble", 2, true);
-            Custom_Table_Ext1.Category.Add(BuildPieceCategory.Crafting);
+            Custom_Table_Ext1.Category.Set(BuildPieceCategory.Crafting);
             Custom_Table_Ext1.Extension.Set("Custom_Sky_Forge", 8);
 
             BuildPiece Custom_Table_Ext2 = new("customforgestone", "Custom_Table_Ext2");
             Custom_Table_Ext2.Name.English("Table Ext 2");
             Custom_Table_Ext2.Description.English("A custom table ext 2");
             Custom_Table_Ext2.RequiredItems.Add("BlackMarble", 2, true);
-            Custom_Table_Ext2.Category.Add(BuildPieceCategory.Crafting);
+            Custom_Table_Ext2.Category.Set(BuildPieceCategory.Crafting);
             Custom_Table_Ext2.Extension.Set("Custom_Sky_Forge", 8);
 
             BuildPiece Custom_Table_Ext3 = new("customforgestone", "Custom_Table_Ext3");
             Custom_Table_Ext3.Name.English("Table Ext 3");
             Custom_Table_Ext3.Description.English("A custom table ext 3");
             Custom_Table_Ext3.RequiredItems.Add("BlackMarble", 2, true);
-            Custom_Table_Ext3.Category.Add(BuildPieceCategory.Crafting);
+            Custom_Table_Ext3.Category.Set(BuildPieceCategory.Crafting);
             Custom_Table_Ext3.Extension.Set("Custom_Sky_Forge", 8);
 
             BuildPiece Custom_BlackForge_Ext_1 = new("customforgestone", "Custom_BlackForge_Ext_1");
@@ -55,7 +79,7 @@ namespace GBCustomTable
             Custom_BlackForge_Ext_1.RequiredItems.Add("YggdrasilWood", 10, true);
             Custom_BlackForge_Ext_1.RequiredItems.Add("BlackCore", 2, true);
             Custom_BlackForge_Ext_1.Crafting.Set(PieceManager.CraftingTable.BlackForge);
-            Custom_BlackForge_Ext_1.Category.Add(BuildPieceCategory.Crafting);
+            Custom_BlackForge_Ext_1.Category.Set(BuildPieceCategory.Crafting);
             Custom_BlackForge_Ext_1.Extension.Set(PieceManager.CraftingTable.BlackForge, 8);
 
             BuildPiece Custom_BlackForge_Ext_2 = new("customforgestone", "Custom_BlackForge_Ext_2");
@@ -64,7 +88,7 @@ namespace GBCustomTable
             Custom_BlackForge_Ext_2.RequiredItems.Add("YggdrasilWood", 10, true);
             Custom_BlackForge_Ext_2.RequiredItems.Add("BlackCore", 2, true);
             Custom_BlackForge_Ext_2.Crafting.Set(PieceManager.CraftingTable.BlackForge);
-            Custom_BlackForge_Ext_2.Category.Add(BuildPieceCategory.Crafting);
+            Custom_BlackForge_Ext_2.Category.Set(BuildPieceCategory.Crafting);
             Custom_BlackForge_Ext_2.Extension.Set(PieceManager.CraftingTable.BlackForge, 8);
 
             BuildPiece Custom_Magetable_Ext_1 = new("customforgestone", "Custom_Magetable_Ext_1");
@@ -73,7 +97,7 @@ namespace GBCustomTable
             Custom_Magetable_Ext_1.RequiredItems.Add("YggdrasilWood", 10, true);
             Custom_Magetable_Ext_1.RequiredItems.Add("BlackCore", 2, true);
             Custom_Magetable_Ext_1.Crafting.Set(PieceManager.CraftingTable.MageTable);
-            Custom_Magetable_Ext_1.Category.Add(BuildPieceCategory.Crafting);
+            Custom_Magetable_Ext_1.Category.Set(BuildPieceCategory.Crafting);
             Custom_Magetable_Ext_1.Extension.Set(PieceManager.CraftingTable.MageTable, 8);
 
             BuildPiece Custom_Magetable_Ext_2 = new("customforgestone", "Custom_Magetable_Ext_2");
@@ -82,7 +106,7 @@ namespace GBCustomTable
             Custom_Magetable_Ext_2.RequiredItems.Add("YggdrasilWood", 10, true);
             Custom_Magetable_Ext_2.RequiredItems.Add("BlackCore", 2, true);
             Custom_Magetable_Ext_2.Crafting.Set(PieceManager.CraftingTable.MageTable);
-            Custom_Magetable_Ext_2.Category.Add(BuildPieceCategory.Crafting);
+            Custom_Magetable_Ext_2.Category.Set(BuildPieceCategory.Crafting);
             Custom_Magetable_Ext_2.Extension.Set(PieceManager.CraftingTable.MageTable, 8);
 
             Item Custom_Eitr_Powerup = new Item("customforgestone", "Custom_Eitr_Powerup");
@@ -94,6 +118,9 @@ namespace GBCustomTable
             Custom_Eitr_Powerup.CraftAmount = 1;
 
 
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            Harmony harmony = new(ModGUID);
+            harmony.PatchAll(assembly);
 
         }
     }
